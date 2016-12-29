@@ -19,8 +19,9 @@
 
 #import "ViewController.h"
 #import "ServerExample.h"
+#import "CommunicationExample.h"
 
-@interface ViewController () <UITextFieldDelegate, ServerResponseDelegate>
+@interface ViewController () <UITextFieldDelegate, ServerResponseDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UILabel * ipAddress;
 @property (weak, nonatomic) IBOutlet UITextField *incomingPortTextField;
@@ -28,8 +29,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *recipientIpAddressTextField;
 @property (weak, nonatomic) IBOutlet UITextField *outcomingPortTextField;
 @property (weak, nonatomic) IBOutlet UITextField *message;
+@property (nonatomic, strong) CommunicationExample * communication;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
-@property (weak, nonatomic) IBOutlet UITextView *receivedMessages;
+@property (nonatomic, strong) NSMutableArray * list;
 
 @end
 
@@ -39,11 +42,14 @@
 
     [super viewDidLoad];
     
-    __weak typeof(self) weakSelf = self;
+    self.communication = [CommunicationExample new];
+    self.communication.delegate = self;
     
-    self.receivedMessages.userInteractionEnabled = false;
+    self.list = [NSMutableArray new];
     
-    weakSelf.ipAddress.text = [ServerExample ipAddress];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
+    
+    self.ipAddress.text = [ServerExample ipAddress];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -55,53 +61,79 @@
 }
 
 - (IBAction)onRunClient:(id)sender {
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        //Background Thread
-        NSNumberFormatter * nf = [NSNumberFormatter new];
-        NSNumber * incomingPort = [nf numberFromString:self.incomingPortTextField.text];
-        NSNumber * outgoingPort = [nf numberFromString:self.outcomingPortTextField.text];
-        
-        NSString * str = [ServerExample runClient:self.recipientIpAddressTextField.text
-                                     outgoingPort:outgoingPort.integerValue
-                                responseIpAddress:self.ipAddress.text
-                                     responsePort:incomingPort.integerValue
-                                          message:self.message.text];
-        [self onResponse:str];
-        
-        dispatch_async(dispatch_get_main_queue(), ^(void){
-            //Run UI Updates
-        });
-    });
+    [self.communication sendMessage:self.message.text];
+//    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+//        //Background Thread
+//        NSNumberFormatter * nf = [NSNumberFormatter new];
+//        NSNumber * incomingPort = [nf numberFromString:self.incomingPortTextField.text];
+//        NSNumber * outgoingPort = [nf numberFromString:self.outcomingPortTextField.text];
+//        
+//        NSString * str = [ServerExample runClient:self.recipientIpAddressTextField.text
+//                                     outgoingPort:outgoingPort.integerValue
+//                                responseIpAddress:self.ipAddress.text
+//                                     responsePort:incomingPort.integerValue
+//                                          message:self.message.text];
+//        [self onResponse:str];
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^(void){
+//            //Run UI Updates
+//        });
+//    });
 }
 
 - (IBAction)onStartServer:(id)sender {
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        //Background Thread
-        NSNumberFormatter * nf = [NSNumberFormatter new];
-        NSNumber * number = [nf numberFromString:self.incomingPortTextField.text];
-        [ServerExample runServer:self port:number.integerValue];
-        
-        dispatch_async(dispatch_get_main_queue(), ^(void){
-            //Run UI Updates
-        });
+    NSNumberFormatter * nf = [NSNumberFormatter new];
+    NSNumber * number = [nf numberFromString:self.incomingPortTextField.text];
+    [self.communication initNetworkCommunication:self.ipAddress.text port:number.unsignedIntValue];
+    [self.communication joinChat:[[UIDevice currentDevice] name]];
+//    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+//        //Background Thread
+//        [ServerExample runServer:self port:number.integerValue];
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^(void){
+//            //Run UI Updates
+//        });
+//    });
+}
+
+- (IBAction)onClear:(id)sender {
+    [self.list removeAllObjects];
+    dispatch_async(dispatch_get_main_queue(), ^(void){
+        //Run UI Updates
+        [self.tableView reloadData];
     });
 }
 
 - (void) onResponse:(NSString *)response {
     
     if(response) {
-        NSMutableString * ms = [NSMutableString new];
-        
-        if(self.receivedMessages.text.length > 0) {
-            [ms appendString:self.receivedMessages.text];
-        }
-        [ms appendFormat:@"%@\n", response];
+        NSCharacterSet *charc=[NSCharacterSet newlineCharacterSet];
+        [self.list addObject:[response stringByTrimmingCharactersInSet:charc]];
         
         dispatch_async(dispatch_get_main_queue(), ^(void){
             //Run UI Updates
-            self.receivedMessages.text = ms.copy;
+            [self.tableView reloadData];
         });
     }
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.list.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+    NSString * str = self.list[indexPath.row];
+    cell.textLabel.text = [NSString stringWithFormat:@"%ld: %@", indexPath.row, str];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
 }
 
 @end
