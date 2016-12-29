@@ -50,6 +50,9 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
     
     self.ipAddress.text = [ServerExample ipAddress];
+    
+    self.recipientIpAddressTextField.text = @"192.168.29.143";
+    self.outcomingPortTextField.text = @"9009";
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -83,9 +86,9 @@
 
 - (IBAction)onStartServer:(id)sender {
     NSNumberFormatter * nf = [NSNumberFormatter new];
-    NSNumber * number = [nf numberFromString:self.incomingPortTextField.text];
-    [self.communication initNetworkCommunication:self.ipAddress.text port:number.unsignedIntValue];
-    [self.communication joinChat:[[UIDevice currentDevice] name]];
+    NSNumber * number = [nf numberFromString:self.outcomingPortTextField.text];
+    [self.communication initNetworkCommunication:self.recipientIpAddressTextField.text port:number.unsignedIntValue];
+//    [self.communication joinChat:[[UIDevice currentDevice] name]];
 //    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
 //        //Background Thread
 //        [ServerExample runServer:self port:number.integerValue];

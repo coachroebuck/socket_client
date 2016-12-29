@@ -13,6 +13,7 @@
     CFWriteStreamRef writeStream;
     NSInputStream *inputStream;
     NSOutputStream *outputStream;
+    NSString * response;
 }
 
 @end
@@ -20,13 +21,13 @@
 @implementation CommunicationExample
 
 - (void) initNetworkCommunication:(NSString *)ip port:(UInt32)port {
-    if(inputStream) {
-        [inputStream close];
-    }
-    if(outputStream) {
-        [outputStream close];
-    }
-    CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)@"192.168.29.143", 9009, &readStream, &writeStream);
+//    if(inputStream) {
+//        [inputStream close];
+//    }
+//    if(outputStream) {
+//        [outputStream close];
+//    }
+    CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)ip, port, &readStream, &writeStream);
     inputStream = (__bridge NSInputStream *)readStream;
     outputStream = (__bridge NSOutputStream *)writeStream;
     [inputStream setDelegate:self];
@@ -39,19 +40,18 @@
 
 - (void)joinChat:(NSString *)deviceName {
     
-    NSString *response  = [NSString stringWithFormat:@"iam:%@", deviceName];
+    response  = [NSString stringWithFormat:@"iam:%@", deviceName];
     NSData *data = [[NSData alloc] initWithData:[response dataUsingEncoding:NSASCIIStringEncoding]];
     [outputStream write:[data bytes] maxLength:[data length]];
 }
 
 - (void)sendMessage:(NSString *)message {
-    NSString *response  = [NSString stringWithFormat:@"msg:%@", message];
+    response  = [NSString stringWithFormat:@"msg:%@", message];
     NSData *data = [[NSData alloc] initWithData:[response dataUsingEncoding:NSASCIIStringEncoding]];
     [outputStream write:[data bytes] maxLength:[data length]];
 }
 
 - (void)stream:(NSStream *)theStream handleEvent:(NSStreamEvent)streamEvent {
-    NSLog(@"stream event %lu", (unsigned long)streamEvent);
     
     switch (streamEvent) {
             
@@ -83,6 +83,14 @@
             break;
             
         case NSStreamEventHasSpaceAvailable:
+        {
+            NSLog(@"Stream Event Has Space Available");
+//            if(response != nil) {
+//                NSData *data = [[NSData alloc] initWithData:[response dataUsingEncoding:NSASCIIStringEncoding]];
+//                [outputStream write:[data bytes] maxLength:[data length]];
+//                response = nil;
+//            }
+        }
             break;
             
         case NSStreamEventErrorOccurred:
@@ -96,7 +104,8 @@
             break;
             
         default:
-            NSLog(@"Unknown event");
+            NSLog(@"Unknown Stream Event %lu", (unsigned long)streamEvent);
+            break;
     }
 }
 
