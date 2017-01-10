@@ -32,6 +32,7 @@
 
 @property (nonatomic, weak) id<SocketClientDelegate> delegate;
 @property (nonatomic, assign) BOOL isRunning;
+@property (nonatomic, assign) long arg;
 
 @end
 
@@ -41,6 +42,7 @@
     SocketClient * client = [SocketClient new];
     client.delegate = delegate;
     client.isRunning = false;
+    client.arg = 0;
     return client;
 }
 
@@ -66,15 +68,38 @@
     }
     dest.sin_port = htons(port_number);
     
+//    if ( (self.arg = fcntl(sockfd, F_GETFL, NULL)) < 0)
+//    {
+//        perror("Failed to initialize connection.");
+//        return false;
+//    }
+//    else
+//    {
+//        self.arg |= O_NONBLOCK;
+//        if( fcntl(sockfd, F_SETFL, self.arg) < 0)
+//        {
+//            perror("Failed to set socket to non-blocking. %s");
+//            return false;
+//        }
+//    }
+    
     /*---Connect to server---*/
     printf("connecting to server...\n");
     if ( connect(sockfd, (struct sockaddr *)&dest, sizeof(dest)) != 0 )
     {
-        perror("Connect");
+        perror("Error Connecting to server");
         return false;
     }
     
     printf("CONNECTED!!...\n");
+    
+    int opt = 1;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_KEEPALIVE, &opt, sizeof(opt)))
+    {
+        perror("Failed to set this socket to keep alive");
+        return false;
+    }
+
     self.isRunning = true;
     return true;
 }

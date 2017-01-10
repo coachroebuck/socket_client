@@ -22,7 +22,7 @@
 #import "CommunicationExample.h"
 #import "SocketClient.h"
 
-#define kClientType             2
+#define kClientType             3
 
 @interface ViewController () <UITextFieldDelegate, ServerResponseDelegate, SocketClientDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -108,7 +108,6 @@
     }
 }
 
-
 - (IBAction)onRunClient:(id)sender {
     
     if(kClientType == 1) {
@@ -178,7 +177,7 @@
                                      outgoingPort:outgoingPort.integerValue
                                 responseIpAddress:self.ipAddress.text
                                      responsePort:incomingPort.integerValue
-                                          message:self.message.text];
+                                          message:message];
         [self onResponse:str];
         
         dispatch_async(dispatch_get_main_queue(), ^(void){
