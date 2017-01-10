@@ -22,7 +22,7 @@
 #import "CommunicationExample.h"
 #import "SocketClient.h"
 
-#define kClientType             1
+#define kClientType             2
 
 @interface ViewController () <UITextFieldDelegate, ServerResponseDelegate, SocketClientDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -56,8 +56,8 @@
     
     self.ipAddress.text = [ServerExample ipAddress];
     
-    self.recipientIpAddressTextField.text = @"192.168.200.86"; //@"192.168.29.143";
-    self.outcomingPortTextField.text = @"5020"; //@"9009";
+    self.recipientIpAddressTextField.text = @"192.168.29.143";
+    self.outcomingPortTextField.text = @"9009";
 }
 
 - (void) touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
