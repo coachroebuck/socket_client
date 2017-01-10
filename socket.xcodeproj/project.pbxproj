@@ -13,6 +13,7 @@
 		700984341E04D81E00856951 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 700984321E04D81E00856951 /* Main.storyboard */; };
 		700984361E04D81E00856951 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 700984351E04D81E00856951 /* Assets.xcassets */; };
 		700984391E04D81E00856951 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 700984371E04D81E00856951 /* LaunchScreen.storyboard */; };
+		7098DCB41E2463FB004B7FE3 /* SocketClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7098DCB31E2463FB004B7FE3 /* SocketClient.m */; };
 		70D3902D1E14AB5800D769A9 /* ServerExample.m in Sources */ = {isa = PBXBuildFile; fileRef = 70D3902C1E14AB5800D769A9 /* ServerExample.m */; };
 		70D390301E14DCFB00D769A9 /* CommunicationExample.m in Sources */ = {isa = PBXBuildFile; fileRef = 70D3902F1E14DCFB00D769A9 /* CommunicationExample.m */; };
 /* End PBXBuildFile section */
@@ -28,6 +29,8 @@
 		700984351E04D81E00856951 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		700984381E04D81E00856951 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7009843A1E04D81E00856951 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7098DCB21E2463FB004B7FE3 /* SocketClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocketClient.h; sourceTree = "<group>"; };
+		7098DCB31E2463FB004B7FE3 /* SocketClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocketClient.m; sourceTree = "<group>"; };
 		70D3902B1E14AB5800D769A9 /* ServerExample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerExample.h; sourceTree = "<group>"; };
 		70D3902C1E14AB5800D769A9 /* ServerExample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerExample.m; sourceTree = "<group>"; };
 		70D3902E1E14DCFB00D769A9 /* CommunicationExample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommunicationExample.h; sourceTree = "<group>"; };
@@ -77,6 +80,8 @@
 				70D3902C1E14AB5800D769A9 /* ServerExample.m */,
 				70D3902E1E14DCFB00D769A9 /* CommunicationExample.h */,
 				70D3902F1E14DCFB00D769A9 /* CommunicationExample.m */,
+				7098DCB21E2463FB004B7FE3 /* SocketClient.h */,
+				7098DCB31E2463FB004B7FE3 /* SocketClient.m */,
 			);
 			path = socket;
 			sourceTree = "<group>";
@@ -164,6 +169,7 @@
 				70D390301E14DCFB00D769A9 /* CommunicationExample.m in Sources */,
 				700984311E04D81E00856951 /* ViewController.m in Sources */,
 				70D3902D1E14AB5800D769A9 /* ServerExample.m in Sources */,
+				7098DCB41E2463FB004B7FE3 /* SocketClient.m in Sources */,
 				7009842E1E04D81E00856951 /* AppDelegate.m in Sources */,
 				7009842B1E04D81E00856951 /* main.m in Sources */,
 			);
