@@ -22,7 +22,7 @@
 #import "CommunicationExample.h"
 #import "SocketClient.h"
 
-#define kClientType             3
+#define kClientType             1
 
 @interface ViewController () <UITextFieldDelegate, ServerResponseDelegate, SocketClientDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -163,7 +163,7 @@
 }
 
 - (void) writeToCommunicationClient:(NSString *)message {
-    [self.communication sendMessage:self.message.text];
+    [self.communication sendMessage:message];
 }
 
 - (void) writeToServerExample:(NSString *)message {

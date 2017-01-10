@@ -140,7 +140,7 @@
     
     /*---If there is a message to send server, send it with a '\n' (newline)---*/
     printf("sending message to server...\n");
-    send(sockfd, buffer, strlen(message.UTF8String), 0);
+    send(sockfd, message.UTF8String, strlen(message.UTF8String), 0);
 
     return true;
 }
